@@ -1,0 +1,29 @@
+procedure first {
+    read i;
+    read position;
+    call Second;
+}
+
+procedure Second {
+    read i;
+    x = 0;
+    j = 5;
+    while (j != 0) {
+        x = x + 2 * y;
+	call printResult;
+    	if (x == 1) then {
+        	x = x+1; }
+    	else {
+        	z = 1; }
+        j = i - 1; 
+    }
+    z = z + x + i;
+    y = z + 2;
+    x = v + x * y + z * t;
+}
+
+procedure printResult {
+    print x;
+    print y;
+    print z;
+}

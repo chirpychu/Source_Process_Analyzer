@@ -1,0 +1,175 @@
+1 - comment
+stmt s;
+Select s such that Follows (3,s)
+4
+5000
+2 - comment
+stmt st;
+Select st such that Follows (5, _)
+2, 3, 4, 5, 7, 9, 10, 14, 16, 18, 19
+5000
+3 - comment
+stmt s;
+Select s such that Follows (s, 10)
+9
+5000
+4 - comment
+stmt s;
+Select s such that Follows* (s, 7)
+6
+5000
+5 - comment
+stmt s;
+Select s such that Follows* (s, 15)
+6, 7, 11
+5000
+6 - comment
+stmt s2;
+Select s2 such that Follows* (5, s2)
+none
+5000
+7 - comment
+stmt s;
+Select s such that Parent (s, 9)
+7
+5000
+8 - comment
+while w;
+Select w such that Parent (w, 10)
+7
+5000
+9 - comment
+stmt s2;
+Select s2 such that Parent (s1, 11)
+none
+5000
+10 - comment
+stmt s;
+Select s such that Parent* (10, s)
+none
+5000
+11 - comment
+stmt s;
+Select s such that Parent* (s, 13)
+11
+5000
+12 - comment
+stmt s;
+Select s such that Parent* (_, 14)
+7, 11
+5000
+13 - which variable modifies containment statement 12
+variable v1;
+Select v1 such that Modifies (12, v1)
+flag
+5000
+14 - which assign statements modifies variable sum
+assign a;
+Select a such that Modifies (a, "sum")
+none
+5000
+15 - which read statement modifies variable index
+read r;
+Select r such that Modifies (r, "x")
+1
+5000
+16 - which print statement uses total
+print pn; variable v;
+Select pn such that Uses (pn, "normSq")
+16
+5000
+17 - which variables are used in assignment 6
+variable v;
+Select v such that Uses (6, v)
+none
+5000
+18 - which assignment statements uses variable sum
+assign a;
+Select a such that Uses (a, "count")
+8, 13, 14
+5000
+19 - Find the assignment stmt where variable appears on the lhs
+assign as; variable v;
+Select as pattern as ("index", _)
+none
+5000
+20 - Find the assignment stmt where constant appears on the rhs
+assign as;
+Select as pattern as (_, "0")
+3, 4, 5
+5000
+21 - Find the assignment stmt where expression appears on the rhs
+assign as;
+Select as pattern as (_, "sum+1")
+none
+5000
+22 - Find the assignment stmt where expression appears on the rhs
+assign as;
+Select as pattern as (_, "cenY / count")
+none
+5000
+23 - Find while loops with assignment to variable
+assign a; while w;
+Select w such that Parent* (w, a) pattern a ("sum", _)
+7
+5000
+24 - Find while loops with rhs expression
+assign a; while w;
+Select w such that Parent* (w, a) pattern a (_, "count + 1")
+7
+5000
+25 - Find if statement with assignment to variable
+assign a; if ifs;
+Select ifs such that Parent* (ifs, a) pattern a ("flag", _)
+11
+5000
+26 - Find assignments that use and modify
+assign a; variable v;
+Select a such that Uses (a, v) pattern a (_, "cenY + y")
+none
+5000
+27 - Find assignments that use and modify
+assign a; while w;
+Select a such that Uses (a, "x") pattern a ("x", _)
+9
+5000
+28 - Find assignments that use and modify
+assign a; variable v;
+Select a such that Uses (a, v) pattern a ("count", _)
+none
+5000
+29 - comment
+assign a; variable v;
+Select a such that Modifies (a, v) pattern a (_, "cenX+x")
+none
+5000
+30 - comment
+assign a; variable v;
+Select a such that Modifies (a, v) pattern a (_, "1")
+none
+5000
+31 - comment
+assign a; variable v;
+Select a such that Modifies (a, v) pattern a (_, "position")
+none
+5000
+32 - Find in while loops that follows with pattern lhs expression
+assign a; while w;
+Select a such that Follows (w, a) pattern a ("cenY", _)
+none
+5000
+33 - Find in if loops that follows with pattern of rhs expression
+assign a; if ifs;
+Select a such that Follows (ifs, a) pattern a (_, "cenX / count")
+none
+5000
+34 - comment
+stmt s1; stmt s2;
+Select s1 such that Follows (s1,s2)
+1, 2, 3, 4, 6, 8, 9, 13, 15, 17, 18
+5000
+35 - comment
+stmt s1; stmt s2;
+Select s2 such that Follows (s1,s2)
+2, 3, 4, 5, 7, 9, 10, 14, 16, 18, 19
+5000

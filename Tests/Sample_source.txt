@@ -1,0 +1,29 @@
+procedure result {
+    read i;
+    read position;
+    read num;
+    read index;
+    call readUser;
+}
+
+procedure readUser {
+    z = 20;
+    total = i + position + z;
+    start = 20;
+    call printResult;
+    while(x < 100){
+    	sum = index + start + num;
+	a = 5;}
+    if(sum == 50) then{
+	sum = sum + 1;} 
+    else {
+	index = index + 1;
+	b = a + 100;}
+    e = a * b;
+}
+
+procedure printResult {
+    print total;
+    print sum;
+    print e;
+}
