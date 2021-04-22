@@ -29,74 +29,75 @@ bool isSymbol(string program)
 	return false;
 }
 
-//string convertPostfix(string infix) {
-//	int i;  // Variable declarations
-//	char mychar;
-//	string postfix = "";
-//	stack<char> char_stack;
-//
-//	for (i = 0; i < infix.length(); i++) {  // Iterate through all the characters
-//		mychar = infix[i];  // temp_storage
-//
-//		if (IsOpeningBracket(mychar)) {
-//			// If the character is opening bracket then push it onto stack.
-//			char_stack.push(mychar);
-//		}
-//		else if (IsClosingBracket(mychar)) {
-//			// If it is closing bracket then then do the following things from the 
-//			// stack.
-//			// 1. Pop all elements until opening bracket is encountered or stack 
-//			// becomes empty.
-//			while (!IsOpeningBracket(char_stack.top())) {
-//				postfix += char_stack.top();
-//				char_stack.pop();
-//				if (char_stack.empty()) {
-//					break;
-//				}
-//			}
-//			// 2. Popping the opening bracket after handling segmentation fault. 
-//			if (!char_stack.empty()) {
-//				char_stack.pop();
-//			}
-//		}
-//		else if (IsNumber(mychar)) {
-//			// If the character is a number.
-//			postfix += mychar;
-//		}
-//		else if (isalpha(mychar)) {
-//			postfix += mychar;
-//		}
-//		else if (IsOperator(mychar)) {
-//			// If the chacter is an operator then do this.
-//			if (char_stack.empty() || IsOpeningBracket(char_stack.top())) {
-//				char_stack.push(mychar);
-//				continue;
-//			}
-//
-//			// Check for the precedence first then do the approprite thing.
-//			if (CheckPrecedence(mychar, char_stack.top())) {
-//				char_stack.push(mychar);
-//			}
-//			else {
-//				while (!IsOpeningBracket(char_stack.top())) {
-//					postfix += char_stack.top();
-//					char_stack.pop();
-//					if (char_stack.empty()) {
-//						break;
-//					}
-//				}
-//				char_stack.push(mychar);
-//			}
-//		}
-//	}
-//
-//	// If the stack is still not empty and contain some characters then do this.
-//	while (!char_stack.empty()) {
-//		postfix += char_stack.top();
-//		char_stack.pop();
-//	}
-//	return postfix;
-//}
+string convertPostfix(string infix) {
+	int i;  // Variable declarations
+	char mychar;
+	string postfix = "";
+	stack<char> char_stack;
+	char_stack.push('N');
+	for (i = 0; i < infix.length(); i++) {  // Iterate through all the characters
+		mychar = infix[i];  // temp_storage
+
+		if (IsOpeningBracket(mychar)) {
+			// If the character is opening bracket then push it onto stack.
+			char_stack.push(mychar);
+		}
+		else if (IsClosingBracket(mychar)) {
+			// If it is closing bracket then then do the following things from the 
+			// stack.
+			// 1. Pop all elements until opening bracket is encountered or stack 
+			// becomes empty.
+			while (!IsOpeningBracket(char_stack.top())) {
+				if (char_stack.empty()) {
+					break;
+				}
+				postfix += char_stack.top();
+				char_stack.pop();
+				
+			}
+			// 2. Popping the opening bracket after handling segmentation fault. 
+			if (!char_stack.empty()) {
+				char_stack.pop();
+			}
+		}
+		else if (IsNumber(mychar)) {
+			// If the character is a number.
+			postfix += mychar;
+		}
+		else if (isalpha(mychar)) {
+			postfix += mychar;
+		}
+		else if (IsOperator(mychar)) {
+			// If the chacter is an operator then do this.
+			if (char_stack.empty() || IsOpeningBracket(char_stack.top())) {
+				char_stack.push(mychar);
+				continue;
+			}
+
+			// Check for the precedence first then do the approprite thing.
+			if (CheckPrecedence(mychar, char_stack.top())) {
+				char_stack.push(mychar);
+			}
+			else {
+					while (char_stack.top() != 'N' && !IsOpeningBracket(char_stack.top())) {
+
+						postfix += char_stack.top();
+						char_stack.pop();
+
+
+					}
+				char_stack.push(mychar);
+			}
+		}
+	}
+
+	// If the stack is still not empty and contain some characters then do this.
+	while (!char_stack.empty()) {
+		postfix += char_stack.top();
+		char_stack.pop();
+	}
+	return postfix;
+}
 
 // method for processing the source program
 // This method currently only inserts the procedure name into the database
@@ -240,7 +241,7 @@ void SourceProcessor::process(string program) {
 						rhs = rhs + tokens[j];
 						j++;
 					}
-					string temp = rhs;
+					string temp = convertPostfix(rhs);
 					Database::insertexpression(statementNumber, temp);
 				}
 				if (isAlpha(tokens[i + 1])) {

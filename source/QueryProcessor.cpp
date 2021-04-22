@@ -13,70 +13,75 @@ QueryProcessor::~QueryProcessor() {}
 
 //helper function to convert pattern into postfix form
 
-//string convert(string infix) {
-//	int i;  // Variable declarations
-//	char mychar;
-//	string postfix = "";
-//	stack<char> char_stack;
-//
-//	for (i = 0; i < infix.length(); i++) {  // Iterate through all the characters
-//		mychar = infix[i];  // temp_storage
-//
-//		if (IsOpeningBracket(mychar)) {
-//			// If the character is opening bracket then push it onto stack.
-//			char_stack.push(mychar);
-//		}
-//		else if (IsClosingBracket(mychar)) {
-//			// If it is closing bracket then then do the following things from the 
-//			// stack.
-//			// 1. Pop all elements until opening bracket is encountered or stack 
-//			// becomes empty.
-//			while (!IsOpeningBracket(char_stack.top())) {
-//				postfix += char_stack.top();
-//				char_stack.pop();
-//				if (char_stack.empty()) break;
-//			}
-//			// 2. Popping the opening bracket after handling segmentation fault. 
-//			if (!char_stack.empty()) {
-//				char_stack.pop();
-//			}
-//		}
-//		else if (IsNumber(mychar)) {
-//			// If the character is a number.
-//			postfix += mychar;
-//		}
-//		else if (isalpha(mychar)) {
-//			postfix += mychar;
-//		}
-//		else if (IsOperator(mychar)) {
-//			// If the chacter is an operator then do this.
-//			if (char_stack.empty() || IsOpeningBracket(char_stack.top())) {
-//				char_stack.push(mychar);
-//				continue;
-//			}
-//
-//			// Check for the precedence first then do the approprite thing.
-//			if (CheckPrecedence(mychar, char_stack.top())) {
-//				char_stack.push(mychar);
-//			}
-//			else {
-//				while (!IsOpeningBracket(char_stack.top())) {
-//					postfix += char_stack.top();
-//					char_stack.pop();
-//					if (char_stack.empty()) break;
-//				}
-//				char_stack.push(mychar);
-//			}
-//		}
-//	}
-//
-//	// If the stack is still not empty and contain some characters then do this.
-//	while (!char_stack.empty()) {
-//		postfix += char_stack.top();
-//		char_stack.pop();
-//	}
-//	return postfix;
-//}
+string convert(string infix) {
+	int i;  // Variable declarations
+	char mychar;
+	string postfix = "";
+	stack<char> char_stack;
+	char_stack.push('N');
+	for (i = 0; i < infix.length(); i++) {  // Iterate through all the characters
+		mychar = infix[i];  // temp_storage
+
+		if (IsOpeningBracket(mychar)) {
+			// If the character is opening bracket then push it onto stack.
+			char_stack.push(mychar);
+		}
+		else if (IsClosingBracket(mychar)) {
+			// If it is closing bracket then then do the following things from the 
+			// stack.
+			// 1. Pop all elements until opening bracket is encountered or stack 
+			// becomes empty.
+			while (!IsOpeningBracket(char_stack.top())) {
+				if (char_stack.empty()) {
+					break;
+				}
+				postfix += char_stack.top();
+				char_stack.pop();
+
+			}
+			// 2. Popping the opening bracket after handling segmentation fault. 
+			if (!char_stack.empty()) {
+				char_stack.pop();
+			}
+		}
+		else if (IsNumber(mychar)) {
+			// If the character is a number.
+			postfix += mychar;
+		}
+		else if (isalpha(mychar)) {
+			postfix += mychar;
+		}
+		else if (IsOperator(mychar)) {
+			// If the chacter is an operator then do this.
+			if (char_stack.empty() || IsOpeningBracket(char_stack.top())) {
+				char_stack.push(mychar);
+				continue;
+			}
+
+			// Check for the precedence first then do the approprite thing.
+			if (CheckPrecedence(mychar, char_stack.top())) {
+				char_stack.push(mychar);
+			}
+			else {
+				while (char_stack.top() != 'N' && !IsOpeningBracket(char_stack.top())) {
+
+					postfix += char_stack.top();
+					char_stack.pop();
+
+
+				}
+				char_stack.push(mychar);
+			}
+		}
+	}
+
+	// If the stack is still not empty and contain some characters then do this.
+	while (!char_stack.empty()) {
+		postfix += char_stack.top();
+		char_stack.pop();
+	}
+	return postfix;
+}
 
 
 
@@ -182,12 +187,12 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 								}	
 								else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6]) == false) {//if lhs of pattern is _
 									entref = tokens[j + 6];
-									string temp = entref;
+									string temp = convert(entref);
 									Database::getpatternexpr2(databaseResults, temp);
 								}
 								else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
 									entref = tokens[j + 7];
-									string temp = entref;
+									string temp = convert(entref);
 									Database::getpatternexpr2(databaseResults, temp);
 								}
 							}
@@ -200,12 +205,12 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 								string entref;
 								if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6]) == false) {//if lhs of pattern is _
 									entref = tokens[j + 6];
-									string temp = entref;
+									string temp = convert(entref);
 									Database::getpatternC2(databaseResults, temp);
 								}
 								else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
 									entref = tokens[j + 7];
-									string temp = entref;
+									string temp = convert(entref);
 									Database::getpatternC2(databaseResults, temp);
 								}
 							}
@@ -229,12 +234,12 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 								}
 								else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6]) == false) {//if lhs of pattern is _
 									entref = tokens[j + 6];
-									string temp = entref;
+									string temp = convert(entref);
 									Database::getpatternexpr(databaseResults, temp);
 								}
 								else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
 									entref = tokens[j + 7];
-									string temp = entref;
+									string temp = convert(entref);
 									Database::getpatternpartialexpr(databaseResults, temp);
 								}
 							}
@@ -475,12 +480,12 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									}
 									else if (verify::isUnderscore(tokens[i + 8]) && verify::isUnderscore(tokens[i+9]) == false) {//if lhs of pattern is _
 										entref = tokens[i + 9];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternfollowsright(databaseResults, temp);
 									}
 									else if (verify::isUnderscore(tokens[i+8]) && verify::isUnderscore(tokens[i+9])) {//if pattern a (_,_"something")
 										entref = tokens[i + 10];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpartialpatternfollowsright(databaseResults, temp);
 									}
 								}
@@ -705,13 +710,13 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									}
 									else if (verify::isUnderscore(tokens[j + 5])) {//if lhs of pattern is _
 										string entref = tokens[j + 6];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternparentright(databaseResults, temp);
 									}
 									else if (verify::isUnderscore(tokens[j + 6]) && verify::isUnderscore(tokens[j + 5])) {
 										string entref = tokens[j + 7];
-										string temp = entref;
-
+										string temp = convert(entref);
+										Database::getpatternparentright(databaseResults, temp);
 									}
 								}
 								else {
@@ -898,7 +903,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									}
 									else if (verify::isUnderscore(tokens[i + 9]) && verify::isUnderscore(tokens[i + 8])) { //partial pattern
 										string entref = tokens[i + 10];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternParent(databaseResults, temp);
 									}
 								}
@@ -1014,7 +1019,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 								}
 								else if (verify::isUnderscore(tokens[i + 9]) && verify::isUnderscore(tokens[i + 8])) { //partial pattern
 									string entref = tokens[i + 10];
-									string temp = entref;
+									string temp = convert(entref);
 									Database::getpatternUses(databaseResults, temp);
 								}
 							}
@@ -1167,7 +1172,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 								}
 								else if (verify::isUnderscore(tokens[i + 8])) {//if lhs of pattern is _
 									entref = tokens[i + 9];
-									string temp = entref;
+									string temp = convert(entref);
 									Database::getpatternM2(databaseResults, temp);
 								}
 								//else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
@@ -1694,7 +1699,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									string entref;
 									if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6]) == false) {//if lhs of pattern is _
 										entref = tokens[j + 6];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext2(databaseResults, temp);
 									}
 									else if (verify::isUnderscore(tokens[j + 6]) && verify::isUnderscore(tokens[j + 5]) == false) {//if rhs of pattern is _
@@ -1703,7 +1708,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									}
 									else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
 										entref = tokens[j + 7];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext2(databaseResults, temp);
 									}
 								}
@@ -1716,7 +1721,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									string entref;
 									if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6]) == false) {//if lhs of pattern is _
 										entref = tokens[j + 6];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext3(databaseResults, temp);
 									}
 									else if (verify::isUnderscore(tokens[j + 6]) && verify::isUnderscore(tokens[j + 5]) == false) {//if rhs of pattern is _
@@ -1725,7 +1730,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									}
 									else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
 										entref = tokens[j + 7];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext3(databaseResults, temp);
 									}
 								}
@@ -1738,7 +1743,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									string entref;
 									if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6]) == false) {//if lhs of pattern is _
 										entref = tokens[j + 6];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext4(databaseResults, temp);
 									}
 									else if (verify::isUnderscore(tokens[j + 6]) && verify::isUnderscore(tokens[j + 5]) == false) {//if rhs of pattern is _
@@ -1747,7 +1752,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									}
 									else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
 										entref = tokens[j + 7];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext4(databaseResults, temp);
 									}
 								}
@@ -1760,7 +1765,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									string entref;
 									if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6]) == false) {//if lhs of pattern is _
 										entref = tokens[j + 6];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext5(databaseResults, temp);
 									}
 									else if (verify::isUnderscore(tokens[j + 6]) && verify::isUnderscore(tokens[j + 5]) == false) {//if rhs of pattern is _
@@ -1769,7 +1774,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									}
 									else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
 										entref = tokens[j + 7];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext5(databaseResults, temp);
 									}
 								}
@@ -1782,7 +1787,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									string entref;
 									if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6]) == false) {//if lhs of pattern is _
 										entref = tokens[j + 6];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext6(databaseResults, temp);
 									}
 									else if (verify::isUnderscore(tokens[j + 6]) && verify::isUnderscore(tokens[j + 5]) == false) {//if rhs of pattern is _
@@ -1791,7 +1796,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									}
 									else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
 										entref = tokens[j + 7];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext6(databaseResults, temp);
 									}
 								}
@@ -1804,7 +1809,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									string entref;
 									if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6]) == false) {//if lhs of pattern is _
 										entref = tokens[j + 6];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext7(databaseResults, temp);
 									}
 									else if (verify::isUnderscore(tokens[j + 6]) && verify::isUnderscore(tokens[j + 5]) == false) {//if rhs of pattern is _
@@ -1813,7 +1818,7 @@ void QueryProcessor::evaluate(string query, vector<string>& output) {
 									}
 									else if (verify::isUnderscore(tokens[j + 5]) && verify::isUnderscore(tokens[j + 6])) {//partial pattern rhs 
 										entref = tokens[j + 7];
-										string temp = entref;
+										string temp = convert(entref);
 										Database::getpatternNext7(databaseResults, temp);
 									}
 								}
