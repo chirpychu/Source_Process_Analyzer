@@ -31,7 +31,7 @@ string convert(string infix) {
 			// stack.
 			// 1. Pop all elements until opening bracket is encountered or stack 
 			// becomes empty.
-			while (!IsOpeningBracket(char_stack.top())) {
+			while (char_stack.top() != 'N' && !IsOpeningBracket(char_stack.top())) {
 				if (char_stack.empty()) {
 					break;
 				}

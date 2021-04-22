@@ -47,7 +47,7 @@ string convertPostfix(string infix) {
 			// stack.
 			// 1. Pop all elements until opening bracket is encountered or stack 
 			// becomes empty.
-			while (!IsOpeningBracket(char_stack.top())) {
+			while (char_stack.top() != 'N' && !IsOpeningBracket(char_stack.top())) {
 				if (char_stack.empty()) {
 					break;
 				}
@@ -213,7 +213,7 @@ void SourceProcessor::process(string program) {
 				j++;
 			}
 		}
-		else if (tokens[i] == "=" && tokens[i - 1] != "=") {
+		else if (tokens[i] == "=" && tokens[i - 1] != "=" && tokens[i - 1] != "!") {
 
 			variableName = tokens[i - 1];
 
